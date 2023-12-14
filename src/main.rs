@@ -38,8 +38,10 @@ async fn greet() -> impl Responder {
 }
 
 async fn setup_pg_connection() -> Result<Client, Error> {
+    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL not set");
+
     let (client, connection) =
-        tokio_postgres::connect("postgresql://localhost/leasing", NoTls).await?;
+        tokio_postgres::connect(&database_url, NoTls).await?;
 
     // The connection object performs the actual communication with the database,
     // so spawn it off to run on its own.
@@ -70,7 +72,7 @@ async fn main() -> std::io::Result<()> {
             .route("/", web::get().to(greet))
             .route("/api/users", web::get().to(get_users))
     })
-    .bind("127.0.0.1:8080")?
+    .bind("0.0.0.0:8080")?
     .run()
     .await
 }
