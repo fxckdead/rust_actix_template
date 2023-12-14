@@ -28,11 +28,6 @@ jobs:
             type=semver,pattern={{major}}
             type=sha
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: arm64
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -56,10 +51,10 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      # - name: Deploy Image to CapRrover
-      #   uses: caprover/deploy-from-github@d76580d79952f6841c453bb3ed37ef452b19752c
-      #   with:
-      #     server: "${{ secrets.CAPROVER_SERVER }}"
-      #     app: "${{ secrets.APP_NAME }}"
-      #     token: "${{ secrets.APP_TOKEN }}"
-      #     image: ${{ env.IMAGE_URL }}
+      - name: Deploy Image to CapRrover
+        uses: caprover/deploy-from-github@d76580d79952f6841c453bb3ed37ef452b19752c
+        with:
+          server: "${{ secrets.CAPROVER_SERVER }}"
+          app: "${{ secrets.APP_NAME }}"
+          token: "${{ secrets.APP_TOKEN }}"
+          image: ${{ env.IMAGE_URL }}
